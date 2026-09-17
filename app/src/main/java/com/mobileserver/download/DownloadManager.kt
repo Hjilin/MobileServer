@@ -15,8 +15,8 @@ import java.util.zip.ZipFile
  */
 class DownloadManager {
     private val client = OkHttpClient()
-    // 默认使用公开可测试的二进制资源源，可替换为你自己fork后的仓库地址
-    private val manifestUrl = "https://gitee.com/huang_songyuan/protocol-download/raw/master/manifest.json"
+    // 指向本项目的二进制资源仓库 manifest
+    private val manifestUrl = "https://raw.githubusercontent.com/Hjilin/mobileserver-bin-resources/main/manifest.json"
 
     data class Component(
         val name: String,
