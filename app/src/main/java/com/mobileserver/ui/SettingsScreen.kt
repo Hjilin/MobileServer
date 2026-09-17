@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mobileserver.bridge.BridgeManager
+import com.mobileserver.core.Paths
 import com.mobileserver.ui.theme.*
 
 @Composable
@@ -32,7 +33,7 @@ fun SettingsScreen() {
             ToggleItem("开机自启动", true)
             ToggleItem("后台保活", true)
             ToggleItem("前台通知", true)
-            NavItem("全局存储目录", BridgeManager.let { com.mobileserver.core.Paths.serverRoot.absolutePath })
+            NavItem("全局存储目录", Paths.serverRoot.absolutePath)
             NavItem("日志保存时长", "7天")
         }
 

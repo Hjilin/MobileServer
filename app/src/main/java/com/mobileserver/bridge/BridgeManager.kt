@@ -131,16 +131,16 @@ object BridgeManager {
         val sql = File(Paths.confDir, "init_db.sql")
         sql.writeText(
             """
-            CREATE DATABASE IF NOT EXISTS ${'$'}dbNameWebsite CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-            CREATE DATABASE IF NOT EXISTS ${'$'}dbNameOpenList CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-            CREATE USER IF NOT EXISTS '${'$'}dbUser'@'127.0.0.1' IDENTIFIED BY '${'$'}dbPassword';
-            GRANT ALL PRIVILEGES ON ${'$'}dbNameWebsite.* TO '${'$'}dbUser'@'127.0.0.1';
-            GRANT ALL PRIVILEGES ON ${'$'}dbNameOpenList.* TO '${'$'}dbUser'@'127.0.0.1';
+            CREATE DATABASE IF NOT EXISTS $dbNameWebsite CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            CREATE DATABASE IF NOT EXISTS $dbNameOpenList CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+            CREATE USER IF NOT EXISTS '$dbUser'@'127.0.0.1' IDENTIFIED BY '$dbPassword';
+            CREATE USER IF NOT EXISTS '$dbUser'@'localhost' IDENTIFIED BY '$dbPassword';
+            GRANT ALL PRIVILEGES ON $dbNameWebsite.* TO '$dbUser'@'127.0.0.1';
+            GRANT ALL PRIVILEGES ON $dbNameOpenList.* TO '$dbUser'@'127.0.0.1';
+            GRANT ALL PRIVILEGES ON $dbNameWebsite.* TO '$dbUser'@'localhost';
+            GRANT ALL PRIVILEGES ON $dbNameOpenList.* TO '$dbUser'@'localhost';
             FLUSH PRIVILEGES;
-            """.trimIndent().replace("$dbNameWebsite", dbNameWebsite)
-                .replace("$dbNameOpenList", dbNameOpenList)
-                .replace("$dbUser", dbUser)
-                .replace("$dbPassword", dbPassword)
+            """.trimIndent()
         )
         return sql
     }
