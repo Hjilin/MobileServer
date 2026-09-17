@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MobileServer</string>
+    <string name="channel_name">本地服务器服务</string>
+    <string name="notification_title">MobileServer 运行中</string>
+    <string name="notification_text">Nginx + PHP + MariaDB + OpenList 已启动</string>
+</resources>

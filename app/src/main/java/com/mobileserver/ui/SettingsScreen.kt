@@ -1,0 +1,163 @@
+package com.mobileserver.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.mobileserver.bridge.BridgeManager
+import com.mobileserver.ui.theme.*
+
+@Composable
+fun SettingsScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MiuiBackground)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        Text("设置", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+
+        // ===== 1. 通用设置（国内用户习惯置顶）=====
+        SectionTitle("通用")
+        SettingsCard {
+            ToggleItem("开机自启动", true)
+            ToggleItem("后台保活", true)
+            ToggleItem("前台通知", true)
+            NavItem("全局存储目录", BridgeManager.let { com.mobileserver.core.Paths.serverRoot.absolutePath })
+            NavItem("日志保存时长", "7天")
+        }
+
+        // ===== 2. Web网站设置 =====
+        SectionTitle("Web 网站设置")
+        SettingsCard {
+            NavItem("网站根目录", "www/")
+            NavItem("端口配置", "8080")
+            NavItem("PHP 参数", "php.ini")
+            var dbPwd by remember { mutableStateOf("••••••••") }
+            ClickItem("数据库账号密码", dbPwd) {
+                dbPwd = "点击修改"
+            }
+        }
+
+        // ===== 3. OpenList网盘设置 =====
+        SectionTitle("OpenList 网盘设置")
+        SettingsCard {
+            NavItem("网盘挂载管理", "3个挂载")
+            NavItem("缓存大小", "512 MB")
+            var mapping by remember { mutableStateOf(BridgeManager.webDirMappingEnabled) }
+            ToggleDynamic("网盘目录映射网站目录", mapping) {
+                mapping = it
+                BridgeManager.webDirMappingEnabled = it
+                BridgeManager.applyWebDirMapping()
+            }
+            NavItem("网页访问密码", "已设置")
+        }
+
+        // ===== 4. 组件管理 =====
+        SectionTitle("组件管理")
+        SettingsCard {
+            NavItem("组件版本更新", "检查更新")
+            NavItem("重新下载组件", "")
+            NavItem("校验文件完整性", "SHA256")
+            NavItem("清理缓存", "")
+        }
+
+        // ===== 5. 系统信息 & 开源许可 =====
+        SectionTitle("系统信息 & 开源许可")
+        SettingsCard {
+            NavItem("设备信息", "Android")
+            NavItem("开源许可", "AGPLv3")
+            NavItem("版本信息", "1.0.0")
+        }
+    }
+}
+
+@Composable
+fun SectionTitle(title: String) {
+    Text(title, style = MaterialTheme.typography.titleMedium, color = MiuiTextPrimary, fontWeight = FontWeight.Medium)
+}
+
+@Composable
+fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
+    Card(shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MiuiSurface)) {
+        Column(Modifier.padding(horizontal = 16.dp), content = content)
+    }
+}
+
+@Composable
+fun ToggleItem(title: String, initial: Boolean) {
+    var checked by remember { mutableStateOf(initial) }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, style = MaterialTheme.typography.bodyLarge)
+        Switch(checked = checked, onCheckedChange = { checked = it })
+    }
+}
+
+@Composable
+fun ToggleDynamic(title: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, style = MaterialTheme.typography.bodyLarge)
+        Switch(checked = checked, onCheckedChange = onChange)
+    }
+}
+
+@Composable
+fun NavItem(title: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, style = MaterialTheme.typography.bodyLarge)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (value.isNotEmpty()) {
+                Text(value, style = MaterialTheme.typography.bodySmall, color = MiuiTextSecondary)
+                Spacer(Modifier.width(6.dp))
+            }
+            Text("›", style = MaterialTheme.typography.bodyLarge, color = MiuiTextHint)
+        }
+    }
+}
+
+@Composable
+fun ClickItem(title: String, value: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(title, style = MaterialTheme.typography.bodyLarge)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (value.isNotEmpty()) {
+                Text(value, style = MaterialTheme.typography.bodySmall, color = MiuiTextSecondary)
+                Spacer(Modifier.width(6.dp))
+            }
+            Text("›", style = MaterialTheme.typography.bodyLarge, color = MiuiTextHint)
+        }
+    }
+}

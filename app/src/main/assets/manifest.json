@@ -1,0 +1,37 @@
+{
+  "manifest_version": "1.0",
+  "arch": "arm64",
+  "base_url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master",
+  "components": {
+    "nginx": {
+      "version": "1.26.2",
+      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/nginx/1.26.2/nginx-arm64.zip",
+      "sha256": "替换为实际文件sha256",
+      "license": "BSD-2-Clause"
+    },
+    "php": {
+      "version": "8.3.0",
+      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/php/8.3.0/php-arm64.zip",
+      "sha256": "替换为实际文件sha256",
+      "license": "PHP License 3.01"
+    },
+    "mariadb": {
+      "version": "12.3.2",
+      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/mariadb/12.3.2/mariadb-arm64.zip",
+      "sha256": "替换为实际文件sha256",
+      "license": "GPLv2"
+    },
+    "redis": {
+      "version": "7.2.5",
+      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/redis/7.2.5/redis-arm64.zip",
+      "sha256": "替换为实际文件sha256",
+      "license": "BSD-3-Clause"
+    },
+    "openlist": {
+      "version": "3.7.0",
+      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/openlist/3.7.0/openlist-arm64.zip",
+      "sha256": "替换为实际文件sha256",
+      "license": "AGPLv3"
+    }
+  }
+}

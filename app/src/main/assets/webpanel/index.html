@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MobileServer 管理面板</title>
+<style>
+  :root {
+    --primary: #FF6900;
+    --primary-dark: #E65100;
+    --bg: #F5F6F7;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text2: #888888;
+    --green: #10AA5A;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .header {
+    background: linear-gradient(135deg, #FF8A3D, var(--primary));
+    color: #fff;
+    padding: 24px 20px;
+    border-radius: 0 0 24px 24px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; }
+  .header p { font-size: 13px; opacity: 0.9; margin-top: 6px; }
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin-top: 12px;
+    background: rgba(255,255,255,0.2);
+  }
+  .container { padding: 16px; max-width: 720px; margin: 0 auto; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .card h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-left: 10px;
+    border-left: 4px solid var(--primary);
+  }
+  .service-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .service-row:last-child { border-bottom: none; }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    background: #BBBBBB;
+  }
+  .dot.on { background: var(--green); }
+  .service-name { font-size: 15px; font-weight: 500; }
+  .service-port { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .btn {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 24px;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn.ghost {
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+  }
+  .btn-row { display: flex; gap: 10px; margin-top: 12px; }
+  .entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+  .entry a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .grid-item {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 8px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .grid-item .icon { font-size: 24px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>MobileServer</h1>
+    <p>手机一体化服务器 · LAMP + OpenList 深度集成</p>
+    <span class="status-badge" id="globalStatus">正在检测服务状态…</span>
+    <div class="btn-row">
+      <button class="btn" onclick="startAll()">一键启动</button>
+      <button class="btn ghost" onclick="stopAll()">一键停止</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <h2>服务状态</h2>
+      <div id="serviceList"></div>
+    </div>
+
+    <div class="card">
+      <h2>访问入口</h2>
+      <div class="entry">
+        <span>管理面板</span>
+        <a href="/" onclick="return false">http://127.0.0.1:8080</a>
+      </div>
+      <div class="entry">
+        <span>PHP 网站</span>
+        <a href="/web/" onclick="return false">/web/</a>
+      </div>
+      <div class="entry">
+        <span>OpenList 网盘</span>
+        <a href="/alist/" onclick="return false">/alist/</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>快捷功能</h2>
+      <div class="grid">
+        <div class="grid-item"><div class="icon">📁</div>文件管理</div>
+        <div class="grid-item"><div class="icon">🗄️</div>数据库</div>
+        <div class="grid-item"><div class="icon">📜</div>日志查看</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const SERVICES = [
+  { name: 'Nginx', port: 8080 },
+  { name: 'PHP-CGI', port: 9000 },
+  { name: 'MariaDB', port: 3306 },
+  { name: 'Redis', port: 6379 },
+  { name: 'OpenList', port: 5244 }
+];
+
+function renderServices() {
+  const list = document.getElementById('serviceList');
+  list.innerHTML = '';
+  SERVICES.forEach(svc => {
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    row.innerHTML = `
+      <div>
+        <div><span class="dot" id="dot-${svc.port}"></span><span class="service-name">${svc.name}</span></div>
+        <div class="service-port">端口 ${svc.port}</div>
+      </div>
+      <button class="btn ghost" onclick="toggleService(${svc.port})">切换</button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+async function checkPort(port) {
+  try {
+    const resp = await fetch(`http://127.0.0.1:${port}/`, { method: 'HEAD', mode: 'no-cors' });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function refreshStatus() {
+  let runningCount = 0;
+  for (const svc of SERVICES) {
+    const running = await checkPort(svc.port);
+    const dot = document.getElementById(`dot-${svc.port}`);
+    if (dot) {
+      dot.className = 'dot' + (running ? ' on' : '');
+    }
+    if (running) runningCount++;
+  }
+  const badge = document.getElementById('globalStatus');
+  if (runningCount === SERVICES.length) {
+    badge.textContent = '全部服务运行中';
+  } else if (runningCount === 0) {
+    badge.textContent = '全部服务已停止';
+  } else {
+    badge.textContent = `${runningCount}/${SERVICES.length} 个服务运行中`;
+  }
+}
+
+function startAll() {
+  fetch('/api/start-all', { method: 'POST' }).then(() => setTimeout(refreshStatus, 2000));
+  document.getElementById('globalStatus').textContent = '正在启动…';
+}
+
+function stopAll() {
+  fetch('/api/stop-all', { method: 'POST' }).then(() => setTimeout(refreshStatus, 2000));
+  document.getElementById('globalStatus').textContent = '正在停止…';
+}
+
+function toggleService(port) {
+  fetch(`/api/toggle?port=${port}`, { method: 'POST' }).then(() => setTimeout(refreshStatus, 2000));
+}
+
+renderServices();
+refreshStatus();
+setInterval(refreshStatus, 5000);
+</script>
+</body>
+</html>
