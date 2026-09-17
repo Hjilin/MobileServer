@@ -96,6 +96,15 @@ object EngineController {
         _services.value = _services.value.toList()
     }
 
+    /**
+     * 启动组件进程前统一设置：工作目录指向组件目录，
+     * 并注入 LD_LIBRARY_PATH（含 lib/、dep/ 下随包分发的 so），否则进程因找不到库而启动失败。
+     */
+    private fun applyRuntimeEnv(pb: ProcessBuilder, comp: String) {
+        pb.directory(Paths.compDir(comp))
+        pb.environment()["LD_LIBRARY_PATH"] = Paths.ldLibraryPath(comp)
+    }
+
     // ============ 各服务启动实现 ============
 
     private fun startNginx(): Process? {
@@ -107,6 +116,7 @@ object EngineController {
             return null
         }
         val pb = ProcessBuilder(Paths.nginxBin.absolutePath, "-c", conf.absolutePath, "-p", Paths.serverRoot.absolutePath)
+        applyRuntimeEnv(pb, "nginx")
         pb.redirectErrorStream(true)
         val p = pb.start()
         consumeOutput(p, "nginx")
@@ -120,6 +130,7 @@ object EngineController {
             return null
         }
         val pb = ProcessBuilder(Paths.phpCgiBin.absolutePath, "-b", "127.0.0.1:9000", "-c", Paths.confDir.absolutePath)
+        applyRuntimeEnv(pb, "php")
         pb.redirectErrorStream(true)
         val p = pb.start()
         consumeOutput(p, "php-fpm")
@@ -136,13 +147,17 @@ object EngineController {
         dataDir.mkdirs()
         // 首次启动初始化数据目录并执行统一建库SQL
         if (!File(dataDir, "ibdata1").exists()) {
-            ProcessBuilder(Paths.mariadbBin.absolutePath, "--initialize-insecure", "--datadir=${dataDir.absolutePath}").start().waitFor()
+            val initPb = ProcessBuilder(Paths.mariadbBin.absolutePath, "--initialize-insecure", "--datadir=${dataDir.absolutePath}")
+            applyRuntimeEnv(initPb, "mariadb")
+            initPb.start().waitFor()
             // 初始化后写入统一数据库配置
             val initSql = BridgeManager.generateDbInitSql()
-            ProcessBuilder(
+            val warmPb = ProcessBuilder(
                 Paths.mariadbBin.absolutePath, "--datadir=${dataDir.absolutePath}",
                 "--socket=${dataDir.absolutePath}/mysql.sock"
-            ).start()
+            )
+            applyRuntimeEnv(warmPb, "mariadb")
+            warmPb.start()
             // 执行init SQL（简化：由Web面板引导执行）
             LogManager.append("mariadb", "[engine] 已生成统一建库SQL: ${initSql.absolutePath}")
         }
@@ -152,6 +167,7 @@ object EngineController {
             "--port=3306",
             "--bind-address=127.0.0.1"
         )
+        applyRuntimeEnv(pb, "mariadb")
         pb.redirectErrorStream(true)
         val p = pb.start()
         consumeOutput(p, "mariadb")
@@ -170,6 +186,7 @@ object EngineController {
             "--bind", "127.0.0.1",
             "--dir", Paths.dataDir.absolutePath
         )
+        applyRuntimeEnv(pb, "redis")
         pb.redirectErrorStream(true)
         val p = pb.start()
         consumeOutput(p, "redis")

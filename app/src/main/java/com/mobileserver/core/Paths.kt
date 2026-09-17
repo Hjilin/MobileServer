@@ -20,12 +20,27 @@ object Paths {
     val logsDir get() = File(serverRoot, "logs")      // 全部服务统一日志目录
     val confDir get() = File(serverRoot, "conf")      // 统一配置文件目录
 
-    // 各服务二进制路径
-    val nginxBin get() = File(binDir, "nginx/nginx")
-    val phpCgiBin get() = File(binDir, "php/php-cgi")
-    val mariadbBin get() = File(binDir, "mariadb/mariadbd")
-    val redisBin get() = File(binDir, "redis/redis-server")
-    val openlistBin get() = File(binDir, "openlist/openlist")
+    // 各服务二进制路径（解压后为 bin/<组件>/bin/<可执行文件>，同目录另有 lib/ 与 dep/ 依赖库）
+    val nginxBin get() = File(binDir, "nginx/bin/nginx")
+    val phpCgiBin get() = File(binDir, "php/bin/php-cgi")
+    val mariadbBin get() = File(binDir, "mariadb/bin/mariadbd")
+    val redisBin get() = File(binDir, "redis/bin/redis-server")
+    val openlistBin get() = File(binDir, "openlist/bin/openlist")
+
+    /** 组件目录：bin/<组件>/ */
+    fun compDir(name: String): File = File(binDir, name)
+
+    /**
+     * 为某组件构造 LD_LIBRARY_PATH，包含其 lib/ 与 dep/ 下的动态库。
+     * 这些二进制依赖随包分发的 so，启动进程时必须注入此路径，否则找不到库而启动失败。
+     */
+    fun ldLibraryPath(name: String): String {
+        val dir = compDir(name)
+        return listOf("lib", "dep")
+            .map { File(dir, it) }
+            .filter { it.exists() }
+            .joinToString(":") { it.absolutePath }
+    }
 
     fun init(context: Context) {
         rootDir = context.filesDir
