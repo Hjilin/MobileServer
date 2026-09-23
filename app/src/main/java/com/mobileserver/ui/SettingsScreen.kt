@@ -73,8 +73,8 @@ fun SettingsScreen(navController: NavController) {
         // ===== 5. 系统信息 & 开源许可 =====
         SectionTitle("系统信息 & 开源许可")
         SettingsCard {
+            ClickItem("关于 & 开源许可", "AGPLv3 / 组件协议") { navController.navigate("about") }
             NavItem("设备信息", "Android")
-            NavItem("开源许可", "AGPLv3")
             NavItem("版本信息", "1.0.0")
         }
     }

@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mobileserver.ui.AboutScreen
 import com.mobileserver.ui.ComponentsScreen
 import com.mobileserver.ui.DatabaseScreen
 import com.mobileserver.ui.FilesScreen
@@ -96,6 +97,7 @@ fun MainScaffold() {
             composable("components") { ComponentsScreen() }
             composable("database") { DatabaseScreen() }
             composable("sites") { SitesScreen() }
+            composable("about") { AboutScreen() }
             composable(
                 route = "preview?url={url}",
                 arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" })
