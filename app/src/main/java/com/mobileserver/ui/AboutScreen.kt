@@ -29,7 +29,7 @@ fun AboutScreen() {
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         Card(shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MiuiSurface)) {
-            Column(Modifier.padding(20.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+            Column(Modifier.padding(20.dp).fillMaxWidth(), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
                 Icon(Icons.Default.Info, null, tint = Primary, modifier = Modifier.size(48.dp))
                 Spacer(Modifier.height(10.dp))
                 Text("MobileServer", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = MiuiTextPrimary)
