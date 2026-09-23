@@ -21,17 +21,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import com.mobileserver.core.Paths
 import com.mobileserver.ui.theme.*
 import java.io.File
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 private val TEXT_EXT = setOf("php", "html", "htm", "txt", "js", "css", "json", "conf", "ini", "log", "sh", "xml", "yml", "yaml", "md")
+// 图片/视频/音乐 → 交给 OpenList Web 在线预览
+private val MEDIA_EXT = setOf("jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "mp4", "mkv", "webm", "mov", "avi", "m4v", "mp3", "flac", "wav", "aac", "ogg", "m4a")
 
 @Composable
-fun FilesScreen() {
+fun FilesScreen(navController: NavController) {
+    val context = LocalContext.current
     var currentDir by remember { mutableStateOf(Paths.wwwDir) }
     var showNewFolder by remember { mutableStateOf(false) }
     var showNewFile by remember { mutableStateOf(false) }
@@ -86,8 +93,17 @@ fun FilesScreen() {
                     FileRow(
                         file = f,
                         onClick = {
-                            if (f.isDirectory) currentDir = f
-                            else if (f.extension.lowercase() in TEXT_EXT) editingFile = f
+                            when {
+                                f.isDirectory -> currentDir = f
+                                f.extension.lowercase() in TEXT_EXT -> editingFile = f
+                                f.extension.lowercase() in MEDIA_EXT -> {
+                                    // 交给 OpenList 在线预览（图片/视频/音乐）
+                                    val rel = f.absolutePath.removePrefix(Paths.wwwDir.absolutePath).removePrefix("/")
+                                    val fileUrl = "http://127.0.0.1:5244/d/" + URLEncoder.encode(rel, "UTF-8")
+                                    navController.navigate("preview?url=" + URLEncoder.encode(fileUrl, "UTF-8"))
+                                }
+                                else -> Toast.makeText(context, "暂不支持此类型预览", Toast.LENGTH_SHORT).show()
+                            }
                         },
                         onDelete = { f.delete(); refreshTick++ }
                     )

@@ -19,16 +19,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavType
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.mobileserver.ui.ComponentsScreen
 import com.mobileserver.ui.FilesScreen
 import com.mobileserver.ui.HomeScreen
 import com.mobileserver.ui.LogsScreen
 import com.mobileserver.ui.NetDiskScreen
+import com.mobileserver.ui.PreviewScreen
 import com.mobileserver.ui.ServicesScreen
 import com.mobileserver.ui.SettingsScreen
 import com.mobileserver.ui.theme.MobileServerTheme
@@ -84,11 +87,20 @@ fun MainScaffold() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { HomeScreen() }
-            composable(Screen.Files.route) { FilesScreen() }
+            composable(Screen.Files.route) { FilesScreen(navController) }
             composable(Screen.NetDisk.route) { NetDiskScreen() }
             composable(Screen.Services.route) { ServicesScreen(navController) }
             composable("logs") { LogsScreen() }
             composable("components") { ComponentsScreen() }
+            composable(
+                route = "preview?url={url}",
+                arguments = [navArgument("url") { type = NavType.StringType; defaultValue = "" }]
+            ) { backStackEntry ->
+                PreviewScreen(
+                    url = backStackEntry.arguments?.getString("url") ?: "",
+                    navController = navController
+                )
+            }
             composable(Screen.Settings.route) { SettingsScreen(navController) }
         }
     }
