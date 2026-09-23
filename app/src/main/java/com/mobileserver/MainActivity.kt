@@ -37,6 +37,7 @@ import com.mobileserver.ui.PreviewScreen
 import com.mobileserver.ui.ServicesScreen
 import com.mobileserver.ui.SettingsScreen
 import com.mobileserver.ui.SitesScreen
+import com.mobileserver.ui.TunnelScreen
 import com.mobileserver.ui.theme.MobileServerTheme
 
 class MainActivity : ComponentActivity() {
@@ -98,6 +99,7 @@ fun MainScaffold() {
             composable("database") { DatabaseScreen() }
             composable("sites") { SitesScreen() }
             composable("about") { AboutScreen() }
+            composable("tunnel") { TunnelScreen() }
             composable(
                 route = "preview?url={url}",
                 arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" })

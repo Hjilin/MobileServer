@@ -20,6 +20,9 @@ object SettingsManager {
     private const val KEY_N2N_PASSWORD = "n2n_password"
     private const val KEY_N2N_VIP = "n2n_vip"
     private const val KEY_WEB_DIR_MAPPING = "web_dir_mapping"
+    private const val KEY_FRP_SERVER = "frp_server"
+    private const val KEY_FRP_TOKEN = "frp_token"
+    private const val KEY_FRP_REMOTE_PORT = "frp_remote_port"
 
     private fun prefs(ctx: Context): SharedPreferences =
         ctx.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -59,4 +62,14 @@ object SettingsManager {
     // 网盘目录映射网站目录
     fun getWebDirMapping(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_WEB_DIR_MAPPING, true)
     fun setWebDirMapping(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_WEB_DIR_MAPPING, v).apply()
+
+    // frp
+    fun getFrpServer(ctx: Context): String = prefs(ctx).getString(KEY_FRP_SERVER, "")!!
+    fun setFrpServer(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_FRP_SERVER, v).apply()
+
+    fun getFrpToken(ctx: Context): String = prefs(ctx).getString(KEY_FRP_TOKEN, "")!!
+    fun setFrpToken(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_FRP_TOKEN, v).apply()
+
+    fun getFrpRemotePort(ctx: Context): Int = prefs(ctx).getInt(KEY_FRP_REMOTE_PORT, 8080)
+    fun setFrpRemotePort(ctx: Context, v: Int) = prefs(ctx).edit().putInt(KEY_FRP_REMOTE_PORT, v).apply()
 }
