@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Devices
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -25,6 +26,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mobileserver.ui.FilesScreen
 import com.mobileserver.ui.HomeScreen
+import com.mobileserver.ui.NetDiskScreen
 import com.mobileserver.ui.ServicesScreen
 import com.mobileserver.ui.SettingsScreen
 import com.mobileserver.ui.theme.MobileServerTheme
@@ -42,15 +44,16 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     data object Home : Screen("home", "首页", Icons.Default.Home)
-    data object Services : Screen("services", "服务", Icons.Default.Devices)
     data object Files : Screen("files", "文件", Icons.Default.Storage)
+    data object NetDisk : Screen("netdisk", "网盘", Icons.Default.Cloud)
+    data object Services : Screen("services", "服务", Icons.Default.Devices)
     data object Settings : Screen("settings", "设置", Icons.Default.Settings)
 }
 
 @Composable
 fun MainScaffold() {
     val navController = rememberNavController()
-    val items = listOf(Screen.Home, Screen.Services, Screen.Files, Screen.Settings)
+    val items = listOf(Screen.Home, Screen.Files, Screen.NetDisk, Screen.Services, Screen.Settings)
 
     Scaffold(
         bottomBar = {
@@ -79,8 +82,9 @@ fun MainScaffold() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { HomeScreen() }
-            composable(Screen.Services.route) { ServicesScreen() }
             composable(Screen.Files.route) { FilesScreen() }
+            composable(Screen.NetDisk.route) { NetDiskScreen() }
+            composable(Screen.Services.route) { ServicesScreen() }
             composable(Screen.Settings.route) { SettingsScreen() }
         }
     }
