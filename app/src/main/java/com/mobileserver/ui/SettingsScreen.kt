@@ -9,15 +9,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.mobileserver.bridge.BridgeManager
 import com.mobileserver.core.Paths
+import com.mobileserver.core.SettingsManager
 import com.mobileserver.ui.theme.*
 
 @Composable
 fun SettingsScreen(navController: NavController) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,11 +34,14 @@ fun SettingsScreen(navController: NavController) {
         // ===== 1. 通用设置（国内用户习惯置顶）=====
         SectionTitle("通用")
         SettingsCard {
-            ToggleItem("开机自启动", true)
-            ToggleItem("后台保活", true)
-            ToggleItem("前台通知", true)
+            var autoStart by remember { mutableStateOf(SettingsManager.autoStart.get(context)) }
+            ToggleItem("开机自启动", autoStart) { autoStart = it; SettingsManager.autoStart.set(context, it) }
+            var keepAlive by remember { mutableStateOf(SettingsManager.keepAlive.get(context)) }
+            ToggleItem("后台保活", keepAlive) { keepAlive = it; SettingsManager.keepAlive.set(context, it) }
+            var notification by remember { mutableStateOf(SettingsManager.notification.get(context)) }
+            ToggleItem("前台通知", notification) { notification = it; SettingsManager.notification.set(context, it) }
             NavItem("全局存储目录", Paths.serverRoot.absolutePath)
-            NavItem("日志保存时长", "7天")
+            NavItem("日志保存时长", "${SettingsManager.logDays.get(context)}天")
         }
 
         // ===== 2. Web网站设置 =====
