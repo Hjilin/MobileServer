@@ -41,13 +41,10 @@ fun SettingsScreen(navController: NavController) {
         // ===== 2. Web网站设置 =====
         SectionTitle("Web 网站设置")
         SettingsCard {
+            ClickItem("数据库管理", "MariaDB / phpMyAdmin") { navController.navigate("database") }
             NavItem("网站根目录", "www/")
             NavItem("端口配置", "8080")
             NavItem("PHP 参数", "php.ini")
-            var dbPwd by remember { mutableStateOf("••••••••") }
-            ClickItem("数据库账号密码", dbPwd) {
-                dbPwd = "点击修改"
-            }
         }
 
         // ===== 3. OpenList网盘设置 =====

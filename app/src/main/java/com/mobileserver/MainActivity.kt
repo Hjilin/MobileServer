@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mobileserver.ui.ComponentsScreen
+import com.mobileserver.ui.DatabaseScreen
 import com.mobileserver.ui.FilesScreen
 import com.mobileserver.ui.HomeScreen
 import com.mobileserver.ui.LogsScreen
@@ -92,6 +93,7 @@ fun MainScaffold() {
             composable(Screen.Services.route) { ServicesScreen(navController) }
             composable("logs") { LogsScreen() }
             composable("components") { ComponentsScreen() }
+            composable("database") { DatabaseScreen() }
             composable(
                 route = "preview?url={url}",
                 arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" })
