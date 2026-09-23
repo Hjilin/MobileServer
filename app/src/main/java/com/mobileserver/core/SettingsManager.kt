@@ -10,7 +10,6 @@ import android.content.SharedPreferences
 object SettingsManager {
     private const val PREFS = "mobile_server_prefs"
 
-    // key
     private const val KEY_AUTO_START = "auto_start"
     private const val KEY_KEEP_ALIVE = "keep_alive"
     private const val KEY_NOTIFICATION = "notification"
@@ -26,48 +25,38 @@ object SettingsManager {
         ctx.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
     // 开机自启
-    var autoStart: Boolean
-        get(ctx: Context) = prefs(ctx).getBoolean(KEY_AUTO_START, true)
-        set(ctx, v) = prefs(ctx).edit().putBoolean(KEY_AUTO_START, v).apply()
+    fun getAutoStart(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_AUTO_START, true)
+    fun setAutoStart(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_AUTO_START, v).apply()
 
     // 后台保活
-    var keepAlive: Boolean
-        get(ctx: Context) = prefs(ctx).getBoolean(KEY_KEEP_ALIVE, true)
-        set(ctx, v) = prefs(ctx).edit().putBoolean(KEY_KEEP_ALIVE, v).apply()
+    fun getKeepAlive(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_KEEP_ALIVE, true)
+    fun setKeepAlive(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_KEEP_ALIVE, v).apply()
 
     // 前台通知
-    var notification: Boolean
-        get(ctx: Context) = prefs(ctx).getBoolean(KEY_NOTIFICATION, true)
-        set(ctx, v) = prefs(ctx).edit().putBoolean(KEY_NOTIFICATION, v).apply()
+    fun getNotification(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_NOTIFICATION, true)
+    fun setNotification(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_NOTIFICATION, v).apply()
 
     // 日志保留天数
-    var logDays: Int
-        get(ctx: Context) = prefs(ctx).getInt(KEY_LOG_DAYS, 7)
-        set(ctx, v) = prefs(ctx).edit().putInt(KEY_LOG_DAYS, v).apply()
+    fun getLogDays(ctx: Context): Int = prefs(ctx).getInt(KEY_LOG_DAYS, 7)
+    fun setLogDays(ctx: Context, v: Int) = prefs(ctx).edit().putInt(KEY_LOG_DAYS, v).apply()
 
     // n2n
-    var n2nEnabled: Boolean
-        get(ctx: Context) = prefs(ctx).getBoolean(KEY_N2N_ENABLED, false)
-        set(ctx, v) = prefs(ctx).edit().putBoolean(KEY_N2N_ENABLED, v).apply()
+    fun getN2nEnabled(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_N2N_ENABLED, false)
+    fun setN2nEnabled(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_N2N_ENABLED, v).apply()
 
-    var n2nSupernode: String
-        get(ctx: Context) = prefs(ctx).getString(KEY_N2N_SUPERNODE, "wang.switchy.hin2n.stars:10086")!!
-        set(ctx, v) = prefs(ctx).edit().putString(KEY_N2N_SUPERNODE, v).apply()
+    fun getN2nSupernode(ctx: Context): String = prefs(ctx).getString(KEY_N2N_SUPERNODE, "wang.switchy.hin2n.stars:10086")!!
+    fun setN2nSupernode(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_N2N_SUPERNODE, v).apply()
 
-    var n2nCommunity: String
-        get(ctx: Context) = prefs(ctx).getString(KEY_N2N_COMMUNITY, "nas-network")!!
-        set(ctx, v) = prefs(ctx).edit().putString(KEY_N2N_COMMUNITY, v).apply()
+    fun getN2nCommunity(ctx: Context): String = prefs(ctx).getString(KEY_N2N_COMMUNITY, "nas-network")!!
+    fun setN2nCommunity(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_N2N_COMMUNITY, v).apply()
 
-    var n2nPassword: String
-        get(ctx: Context) = prefs(ctx).getString(KEY_N2N_PASSWORD, "nas123456")!!
-        set(ctx, v) = prefs(ctx).edit().putString(KEY_N2N_PASSWORD, v).apply()
+    fun getN2nPassword(ctx: Context): String = prefs(ctx).getString(KEY_N2N_PASSWORD, "nas123456")!!
+    fun setN2nPassword(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_N2N_PASSWORD, v).apply()
 
-    var n2nVirtualIp: String
-        get(ctx: Context) = prefs(ctx).getString(KEY_N2N_VIP, "192.168.100.1")!!
-        set(ctx, v) = prefs(ctx).edit().putString(KEY_N2N_VIP, v).apply()
+    fun getN2nVirtualIp(ctx: Context): String = prefs(ctx).getString(KEY_N2N_VIP, "192.168.100.1")!!
+    fun setN2nVirtualIp(ctx: Context, v: String) = prefs(ctx).edit().putString(KEY_N2N_VIP, v).apply()
 
     // 网盘目录映射网站目录
-    var webDirMapping: Boolean
-        get(ctx: Context) = prefs(ctx).getBoolean(KEY_WEB_DIR_MAPPING, true)
-        set(ctx, v) = prefs(ctx).edit().putBoolean(KEY_WEB_DIR_MAPPING, v).apply()
+    fun getWebDirMapping(ctx: Context): Boolean = prefs(ctx).getBoolean(KEY_WEB_DIR_MAPPING, true)
+    fun setWebDirMapping(ctx: Context, v: Boolean) = prefs(ctx).edit().putBoolean(KEY_WEB_DIR_MAPPING, v).apply()
 }

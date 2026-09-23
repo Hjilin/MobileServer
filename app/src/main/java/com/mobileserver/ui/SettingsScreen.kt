@@ -34,14 +34,14 @@ fun SettingsScreen(navController: NavController) {
         // ===== 1. 通用设置（国内用户习惯置顶）=====
         SectionTitle("通用")
         SettingsCard {
-            var autoStart by remember { mutableStateOf(SettingsManager.autoStart.get(context)) }
-            ToggleItem("开机自启动", autoStart) { autoStart = it; SettingsManager.autoStart.set(context, it) }
-            var keepAlive by remember { mutableStateOf(SettingsManager.keepAlive.get(context)) }
-            ToggleItem("后台保活", keepAlive) { keepAlive = it; SettingsManager.keepAlive.set(context, it) }
-            var notification by remember { mutableStateOf(SettingsManager.notification.get(context)) }
-            ToggleItem("前台通知", notification) { notification = it; SettingsManager.notification.set(context, it) }
+            var autoStart by remember { mutableStateOf(SettingsManager.getAutoStart(context)) }
+            ToggleItem("开机自启动", autoStart) { autoStart = it; SettingsManager.setAutoStart(context, it) }
+            var keepAlive by remember { mutableStateOf(SettingsManager.getKeepAlive(context)) }
+            ToggleItem("后台保活", keepAlive) { keepAlive = it; SettingsManager.setKeepAlive(context, it) }
+            var notification by remember { mutableStateOf(SettingsManager.getNotification(context)) }
+            ToggleItem("前台通知", notification) { notification = it; SettingsManager.setNotification(context, it) }
             NavItem("全局存储目录", Paths.serverRoot.absolutePath)
-            NavItem("日志保存时长", "${SettingsManager.logDays.get(context)}天")
+            NavItem("日志保存时长", "${SettingsManager.getLogDays(context)}天")
         }
 
         // ===== 2. Web网站设置 =====
