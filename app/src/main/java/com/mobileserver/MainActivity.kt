@@ -24,6 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.mobileserver.ui.ComponentsScreen
 import com.mobileserver.ui.FilesScreen
 import com.mobileserver.ui.HomeScreen
 import com.mobileserver.ui.LogsScreen
@@ -87,7 +88,8 @@ fun MainScaffold() {
             composable(Screen.NetDisk.route) { NetDiskScreen() }
             composable(Screen.Services.route) { ServicesScreen(navController) }
             composable("logs") { LogsScreen() }
-            composable(Screen.Settings.route) { SettingsScreen() }
+            composable("components") { ComponentsScreen() }
+            composable(Screen.Settings.route) { SettingsScreen(navController) }
         }
     }
 }

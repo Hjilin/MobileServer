@@ -11,12 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.mobileserver.bridge.BridgeManager
 import com.mobileserver.core.Paths
 import com.mobileserver.ui.theme.*
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -66,8 +67,7 @@ fun SettingsScreen() {
         // ===== 4. 组件管理 =====
         SectionTitle("组件管理")
         SettingsCard {
-            NavItem("组件版本更新", "检查更新")
-            NavItem("重新下载组件", "")
+            ClickItem("组件版本管理", "查看/下载") { navController.navigate("components") }
             NavItem("校验文件完整性", "SHA256")
             NavItem("清理缓存", "")
         }
