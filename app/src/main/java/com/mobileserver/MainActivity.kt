@@ -35,6 +35,7 @@ import com.mobileserver.ui.NetDiskScreen
 import com.mobileserver.ui.PreviewScreen
 import com.mobileserver.ui.ServicesScreen
 import com.mobileserver.ui.SettingsScreen
+import com.mobileserver.ui.SitesScreen
 import com.mobileserver.ui.theme.MobileServerTheme
 
 class MainActivity : ComponentActivity() {
@@ -94,6 +95,7 @@ fun MainScaffold() {
             composable("logs") { LogsScreen() }
             composable("components") { ComponentsScreen() }
             composable("database") { DatabaseScreen() }
+            composable("sites") { SitesScreen() }
             composable(
                 route = "preview?url={url}",
                 arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" })

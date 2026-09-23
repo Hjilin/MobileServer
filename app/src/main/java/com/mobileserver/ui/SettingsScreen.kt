@@ -41,6 +41,7 @@ fun SettingsScreen(navController: NavController) {
         // ===== 2. Web网站设置 =====
         SectionTitle("Web 网站设置")
         SettingsCard {
+            ClickItem("网站管理", "添加站点 / 端口绑定") { navController.navigate("sites") }
             ClickItem("数据库管理", "MariaDB / phpMyAdmin") { navController.navigate("database") }
             NavItem("网站根目录", "www/")
             NavItem("端口配置", "8080")
