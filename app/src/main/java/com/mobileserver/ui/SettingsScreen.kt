@@ -99,7 +99,7 @@ fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-fun ToggleItem(title: String, initial: Boolean) {
+fun ToggleItem(title: String, initial: Boolean, onChange: ((Boolean) -> Unit)? = null) {
     var checked by remember { mutableStateOf(initial) }
     Row(
         modifier = Modifier
@@ -109,7 +109,10 @@ fun ToggleItem(title: String, initial: Boolean) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(title, style = MaterialTheme.typography.bodyLarge)
-        Switch(checked = checked, onCheckedChange = { checked = it })
+        Switch(checked = checked, onCheckedChange = {
+            checked = it
+            onChange?.invoke(it)
+        })
     }
 }
 
