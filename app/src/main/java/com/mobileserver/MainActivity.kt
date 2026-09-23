@@ -94,7 +94,7 @@ fun MainScaffold() {
             composable("components") { ComponentsScreen() }
             composable(
                 route = "preview?url={url}",
-                arguments = [navArgument("url") { type = NavType.StringType; defaultValue = "" }]
+                arguments = listOf(navArgument("url") { type = NavType.StringType; defaultValue = "" })
             ) { backStackEntry ->
                 PreviewScreen(
                     url = backStackEntry.arguments?.getString("url") ?: "",

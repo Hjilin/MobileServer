@@ -21,6 +21,7 @@ import androidx.compose.ui.viewinterop.AndroidView
  * 复用 OpenList 自带的图片/视频/音乐/文档在线查看能力。
  */
 @SuppressLint("SetJavaScriptEnabled")
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewScreen(url: String, navController: NavController) {
     Scaffold(
