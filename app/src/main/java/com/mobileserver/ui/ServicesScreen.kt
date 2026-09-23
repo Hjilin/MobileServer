@@ -1,6 +1,7 @@
 package com.mobileserver.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -9,12 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mobileserver.engine.EngineController.ServiceState
 import com.mobileserver.ui.theme.*
 
 @Composable
-fun ServicesScreen(viewModel: ServerViewModel = viewModel()) {
+fun ServicesScreen(navController: NavController, viewModel: ServerViewModel = viewModel()) {
     val services by viewModel.services.collectAsState()
 
     Column(
@@ -51,6 +53,22 @@ fun ServicesScreen(viewModel: ServerViewModel = viewModel()) {
                         HorizontalDivider(color = MiuiDivider)
                     }
                 }
+            }
+        }
+
+        // 运行日志入口
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = MiuiSurface),
+            modifier = Modifier.clickable { navController.navigate("logs") }
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("查看运行日志", style = MaterialTheme.typography.bodyLarge, color = MiuiTextPrimary)
+                Text("nginx/php/mariadb… ›", style = MaterialTheme.typography.bodySmall, color = MiuiTextSecondary)
             }
         }
 
