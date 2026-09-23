@@ -107,7 +107,7 @@ fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
             Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                 Text("服务状态", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MiuiTextPrimary)
                 Spacer(Modifier.height(6.dp))
-                services.forEach { svc -> ServiceRow(svc, viewModel) }
+                services.forEach { svc -> HomeServiceRow(svc, viewModel) }
             }
         }
 
@@ -147,7 +147,7 @@ fun StatCard(label: String, value: String, icon: ImageVector, tint: Color, modif
 }
 
 @Composable
-fun ServiceRow(svc: ServiceState, viewModel: ServerViewModel) {
+fun HomeServiceRow(svc: ServiceState, viewModel: ServerViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
