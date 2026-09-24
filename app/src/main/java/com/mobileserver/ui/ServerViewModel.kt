@@ -50,7 +50,8 @@ class ServerViewModel : ViewModel() {
                 EngineController.stop(type)
             } else {
                 _loading.value = true
-                EngineController.start(type)
+                runCatching { EngineController.start(type) }
+                    .onFailure { com.mobileserver.util.LogManager.append("ui", "[error] 启动失败: ${it.message}") }
                 _loading.value = false
             }
             refresh()
@@ -60,7 +61,8 @@ class ServerViewModel : ViewModel() {
     fun startAll() {
         viewModelScope.launch {
             _loading.value = true
-            EngineController.startAll()
+            runCatching { EngineController.startAll() }
+                .onFailure { com.mobileserver.util.LogManager.append("ui", "[error] 一键启动失败: ${it.message}") }
             delay(500)
             _loading.value = false
             refresh()

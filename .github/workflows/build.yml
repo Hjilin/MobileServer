@@ -45,12 +45,12 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
-      - name: Build Release APK (Unsigned)
+      - name: Build Release APK (Signed with debug keystore)
         run: gradle assembleRelease --no-daemon --stacktrace
 
-      - name: Upload Release Unsigned APK
+      - name: Upload Release APK
         uses: actions/upload-artifact@v4
         with:
           name: MobileServer-Release-${{ github.sha }}
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          path: app/build/outputs/apk/release/app-release.apk
           retention-days: 90
