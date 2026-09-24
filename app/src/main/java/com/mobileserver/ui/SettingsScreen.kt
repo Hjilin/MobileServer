@@ -1,6 +1,7 @@
 package com.mobileserver.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -131,10 +132,11 @@ fun ToggleDynamic(title: String, checked: Boolean, onChange: (Boolean) -> Unit) 
 }
 
 @Composable
-fun NavItem(title: String, value: String) {
+fun NavItem(title: String, value: String, onClick: (() -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .let { if (onClick != null) it.clickable { onClick() } else it }
             .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -155,6 +157,7 @@ fun ClickItem(title: String, value: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
