@@ -206,6 +206,7 @@ object EngineController {
             "--database", "sqlite",
             "--dbpath", "${Paths.dataDir}/openlist.db"
         )
+        applyRuntimeEnv(pb, "openlist")
         pb.directory(Paths.storageDir)
         pb.redirectErrorStream(true)
         val p = pb.start()
