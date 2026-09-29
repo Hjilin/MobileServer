@@ -23,7 +23,7 @@ import com.mobileserver.ui.theme.*
 import java.io.File
 
 /**
- * 组件管理页：展示二进制组件版本、安装状态、下载/重新下载。
+ * 组件管理页：每个组件独立下载，互不阻塞。
  */
 @Composable
 fun ComponentsScreen() {
@@ -31,8 +31,10 @@ fun ComponentsScreen() {
     val dm = remember { DownloadManager(context) }
     var comps by remember { mutableStateOf<List<DownloadManager.Component>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
-    var installingName by remember { mutableStateOf<String?>(null) }
-    var progress by remember { mutableStateOf(0f) }
+    // 每个组件独立进度和状态
+    val progressMap = remember { mutableStateMapOf<String, Float>() }
+    val installingMap = remember { mutableStateMapOf<String, Boolean>() }
+    val installedMap = remember { mutableStateMapOf<String, Boolean>() }
     var errorMsg by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
@@ -40,7 +42,11 @@ fun ComponentsScreen() {
         loading = true
         errorMsg = null
         runCatching { dm.fetchManifest() }
-            .onSuccess { comps = it; loading = false }
+            .onSuccess {
+                comps = it
+                it.forEach { c -> installedMap[c.name] = File(Paths.binDir, c.name).exists() }
+                loading = false
+            }
             .onFailure { errorMsg = "读取组件清单失败: ${it.message}"; loading = false }
     }
 
@@ -51,7 +57,7 @@ fun ComponentsScreen() {
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Text("组件管理", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = MiuiTextPrimary)
-        Text("Nginx / PHP / MariaDB / Redis / OpenList", style = MaterialTheme.typography.bodySmall, color = MiuiTextSecondary)
+        Text("Nginx / PHP / MariaDB / Redis / OpenList / FRP", style = MaterialTheme.typography.bodySmall, color = MiuiTextSecondary)
         Spacer(Modifier.height(14.dp))
 
         if (loading) {
@@ -67,19 +73,24 @@ fun ComponentsScreen() {
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 items(comps) { c ->
-                    val installed = File(Paths.binDir, c.name).exists()
                     CompCard(
                         comp = c,
-                        installed = installed,
-                        installing = installingName == c.name,
-                        progress = progress,
+                        installed = installedMap[c.name] == true,
+                        installing = installingMap[c.name] == true,
+                        progress = progressMap[c.name] ?: 0f,
                         onInstall = {
-                            installingName = c.name; progress = 0f
+                            installingMap[c.name] = true
+                            progressMap[c.name] = 0f
                             scope.launch {
-                                runCatching { dm.installComponent(c) { progress = it } }
-                                    .onSuccess { Toast.makeText(context, "${c.name} 安装完成", Toast.LENGTH_SHORT).show() }
-                                    .onFailure { Toast.makeText(context, "${c.name} 失败: ${it.message}", Toast.LENGTH_LONG).show() }
-                                installingName = null
+                                runCatching { dm.installComponent(c) { p -> progressMap[c.name] = p } }
+                                    .onSuccess {
+                                        installedMap[c.name] = true
+                                        Toast.makeText(context, "${c.name} 安装完成", Toast.LENGTH_SHORT).show()
+                                    }
+                                    .onFailure {
+                                        Toast.makeText(context, "${c.name} 失败: ${it.message}", Toast.LENGTH_LONG).show()
+                                    }
+                                installingMap[c.name] = false
                             }
                         }
                     )
