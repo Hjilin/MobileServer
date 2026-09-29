@@ -50,13 +50,13 @@ fun MainScaffold() {
     val scope = rememberCoroutineScope()
 
     val items = listOf(
-        NavItem("home", "仪表盘", Icons.Default.Dashboard),
-        NavItem("sites", "网站管理", Icons.Default.Language),
+        NavItem("home", "仪表盘", Icons.Default.Home),
+        NavItem("sites", "网站管理", Icons.Default.Info),
         NavItem("files", "文件管理", Icons.Default.Folder),
-        NavItem("ftp", "FTP 用户", Icons.Default.Dns),
+        NavItem("ftp", "FTP 用户", Icons.Default.Share),
         NavItem("webdav", "WebDAV 共享", Icons.Default.Cloud),
         NavItem("db", "数据库", Icons.Default.Storage),
-        NavItem("tunnel", "内网穿透", Icons.Default.ConfirmationNumber),
+        NavItem("tunnel", "内网穿透", Icons.Default.Build),
         NavItem("components", "组件管理", Icons.Default.Download),
         NavItem("logs", "运行日志", Icons.Default.Article),
         NavItem("settings", "设置", Icons.Default.Settings),

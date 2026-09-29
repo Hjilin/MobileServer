@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mobileserver.engine.EngineController.ServiceState
 import com.mobileserver.ui.theme.*
+import com.mobileserver.util.NetworkUtil
 
 @Composable
 fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
@@ -29,6 +30,7 @@ fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
     val isAllRunning by viewModel.isAllRunning.collectAsState()
     val loading by viewModel.loading.collectAsState()
     val runningCount = services.count { it.isRunning }
+    val localIp = remember { NetworkUtil.getLocalIp() }
 
     Column(
         modifier = Modifier
@@ -60,7 +62,7 @@ fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
                     )
                     Spacer(Modifier.height(6.dp))
                     Text(
-                        "统一入口 http://127.0.0.1:8080",
+                        "统一入口 http://$localIp:8080",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White.copy(alpha = 0.9f)
                     )
@@ -94,7 +96,7 @@ fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
             StatCard("统一端口", "8080", Icons.Default.Dns, Green, Modifier.weight(1f))
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
-            StatCard("本机地址", "127.0.0.1", Icons.Default.Public, Amber, Modifier.weight(1f))
+            StatCard("本机地址", localIp, Icons.Default.Public, Amber, Modifier.weight(1f))
             StatCard("网盘", "OpenList", Icons.Default.Cloud, Purple, Modifier.weight(1f))
         }
 
@@ -120,10 +122,13 @@ fun HomeScreen(viewModel: ServerViewModel = viewModel()) {
             Column(Modifier.padding(16.dp)) {
                 Text("访问信息", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = MiuiTextPrimary)
                 Spacer(Modifier.height(10.dp))
-                AccessLine("Web 面板", "http://127.0.0.1:8080/")
-                AccessLine("PHP 站点", "http://127.0.0.1:8080/web/")
-                AccessLine("网盘管理", "http://127.0.0.1:8080/alist/")
-                AccessLine("本机 IP", "在同一 WiFi 下局域网可访问")
+                AccessLine("本机 IP", localIp)
+                AccessLine("Web 面板", "http://$localIp:8080/")
+                AccessLine("PHP 站点", "http://$localIp:8080/web/")
+                AccessLine("网盘管理", "http://$localIp:5244/")
+                AccessLine("WebDAV", "http://$localIp:8080/dav/")
+                AccessLine("网站目录", "/data/data/com.mobileserver/files/server/www")
+                AccessLine("文件存储", "/data/data/com.mobileserver/files/server/storage")
             }
         }
         Spacer(Modifier.height(8.dp))
