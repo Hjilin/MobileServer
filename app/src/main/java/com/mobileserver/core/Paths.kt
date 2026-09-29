@@ -26,6 +26,7 @@ object Paths {
     val mariadbBin get() = File(binDir, "mariadb/bin/mariadbd")
     val redisBin get() = File(binDir, "redis/bin/redis-server")
     val openlistBin get() = File(binDir, "openlist/bin/openlist")
+    val frpBin get() = File(binDir, "frp/bin/frpc")
 
     /** 组件目录：bin/<组件>/ */
     fun compDir(name: String): File = File(binDir, name)
@@ -54,7 +55,7 @@ object Paths {
      * 赋予二进制可执行权限
      */
     fun setExecutable() {
-        listOf(nginxBin, phpCgiBin, mariadbBin, redisBin, openlistBin).forEach { bin ->
+        listOf(nginxBin, phpCgiBin, mariadbBin, redisBin, openlistBin, frpBin).forEach { bin ->
             if (bin.exists()) {
                 bin.setExecutable(true, false)
             }
