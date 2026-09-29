@@ -145,21 +145,13 @@ object EngineController {
         }
         val dataDir = File(Paths.dataDir, "mysql")
         dataDir.mkdirs()
-        // 首次启动初始化数据目录并执行统一建库SQL
+        // 首次启动初始化数据目录
         if (!File(dataDir, "ibdata1").exists()) {
             val initPb = ProcessBuilder(Paths.mariadbBin.absolutePath, "--initialize-insecure", "--datadir=${dataDir.absolutePath}")
             applyRuntimeEnv(initPb, "mariadb")
             initPb.start().waitFor()
-            // 初始化后写入统一数据库配置
             val initSql = BridgeManager.generateDbInitSql()
-            val warmPb = ProcessBuilder(
-                Paths.mariadbBin.absolutePath, "--datadir=${dataDir.absolutePath}",
-                "--socket=${dataDir.absolutePath}/mysql.sock"
-            )
-            applyRuntimeEnv(warmPb, "mariadb")
-            warmPb.start()
-            // 执行init SQL（简化：由Web面板引导执行）
-            LogManager.append("mariadb", "[engine] 已生成统一建库SQL: ${initSql.absolutePath}")
+            LogManager.append("mariadb", "[engine] 已初始化数据目录，建库SQL: ${initSql.absolutePath}")
         }
         val pb = ProcessBuilder(
             Paths.mariadbBin.absolutePath,
