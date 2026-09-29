@@ -27,19 +27,21 @@ import java.io.File
  */
 @Composable
 fun ComponentsScreen() {
-    val dm = remember { DownloadManager() }
+    val context = LocalContext.current
+    val dm = remember { DownloadManager(context) }
     var comps by remember { mutableStateOf<List<DownloadManager.Component>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var installingName by remember { mutableStateOf<String?>(null) }
     var progress by remember { mutableStateOf(0f) }
-    val context = LocalContext.current
+    var errorMsg by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         loading = true
+        errorMsg = null
         runCatching { dm.fetchManifest() }
             .onSuccess { comps = it; loading = false }
-            .onFailure { loading = false; Toast.makeText(context, "拉取组件清单失败: ${it.message}", Toast.LENGTH_LONG).show() }
+            .onFailure { errorMsg = "读取组件清单失败: ${it.message}"; loading = false }
     }
 
     Column(
@@ -55,6 +57,12 @@ fun ComponentsScreen() {
         if (loading) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = Primary)
+            }
+        } else if (errorMsg != null) {
+            Card(shape = RoundedCornerShape(16.dp), colors = CardDefaults.cardColors(containerColor = MiuiSurface)) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(errorMsg!!, color = MaterialTheme.colorScheme.error, fontSize = 14.sp)
+                }
             }
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {

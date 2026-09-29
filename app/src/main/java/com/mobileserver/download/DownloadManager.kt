@@ -1,5 +1,6 @@
 package com.mobileserver.download
 
+import android.content.Context
 import com.mobileserver.core.Paths
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,15 +9,17 @@ import okhttp3.Request
 import org.json.JSONObject
 import java.io.File
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 
 /**
- * 组件下载管理器：读取manifest清单，下载二进制包，校验，解压
+ * 组件下载管理器：从assets读manifest清单，下载二进制包，校验，解压
  */
-class DownloadManager {
-    private val client = OkHttpClient()
-    // 指向本项目的二进制资源仓库 manifest
-    private val manifestUrl = "https://raw.githubusercontent.com/Hjilin/mobileserver-bin-resources/main/manifest.json"
+class DownloadManager(private val context: Context) {
+    private val client = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .build()
 
     data class Component(
         val name: String,
@@ -26,25 +29,23 @@ class DownloadManager {
     )
 
     suspend fun fetchManifest(): List<Component> = withContext(Dispatchers.IO) {
-        val req = Request.Builder().url(manifestUrl).build()
-        client.newCall(req).execute().use { resp ->
-            val body = resp.body?.string() ?: return@withContext emptyList()
-            val json = JSONObject(body)
-            val componentsObj = json.getJSONObject("components")
-            val components = mutableListOf<Component>()
-            componentsObj.keys().forEach { key ->
-                val item = componentsObj.getJSONObject(key)
-                components.add(
-                    Component(
-                        name = key,
-                        version = item.getString("version"),
-                        url = item.getString("url"),
-                        sha256 = item.getString("sha256")
-                    )
+        // 从 assets 读本地 manifest（不联网拉，避免国内访问 GitHub raw 失败）
+        val jsonStr = context.assets.open("manifest.json").bufferedReader().use { it.readText() }
+        val json = JSONObject(jsonStr)
+        val componentsObj = json.getJSONObject("components")
+        val components = mutableListOf<Component>()
+        componentsObj.keys().forEach { key ->
+            val item = componentsObj.getJSONObject(key)
+            components.add(
+                Component(
+                    name = key,
+                    version = item.getString("version"),
+                    url = item.getString("url"),
+                    sha256 = item.getString("sha256")
                 )
-            }
-            components
+            )
         }
+        components
     }
 
     /**

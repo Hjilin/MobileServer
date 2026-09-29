@@ -1,37 +1,48 @@
 {
   "manifest_version": "1.0",
-  "arch": "arm64",
-  "base_url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master",
+  "updated": "2026-09-29",
   "components": {
     "nginx": {
       "version": "1.26.2",
-      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/nginx/1.26.2/nginx-arm64.zip",
-      "sha256": "替换为实际文件sha256",
-      "license": "BSD-2-Clause"
+      "license": "BSD 2-Clause",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/nginx-1.26.2-arm64.zip",
+      "sha256": "6c7cc314f0834addf401deb896d9c86a631844eb6dbd975b976386c186801719",
+      "entry": "bin/nginx"
     },
     "php": {
-      "version": "8.3.0",
-      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/php/8.3.0/php-arm64.zip",
-      "sha256": "替换为实际文件sha256",
-      "license": "PHP License 3.01"
+      "version": "8.5.1",
+      "license": "PHP License 3.01",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/php-8.5.1-combined-arm64.zip",
+      "sha256": "e3d075ed45382973b2ddf82dec06d10532ac595dbb351e74da8beffc198d8f6b",
+      "entry": "bin/php-cgi"
     },
     "mariadb": {
       "version": "12.3.2",
-      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/mariadb/12.3.2/mariadb-arm64.zip",
-      "sha256": "替换为实际文件sha256",
-      "license": "GPLv2"
+      "license": "GPL v2",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/mariadb-12.3.2-arm64.zip",
+      "sha256": "ae99fb7523c75cc586a0da30f090a36479fa898a095d204a5d04caa63f74fd5e",
+      "entry": "bin/mariadbd"
     },
     "redis": {
       "version": "7.2.5",
-      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/redis/7.2.5/redis-arm64.zip",
-      "sha256": "替换为实际文件sha256",
-      "license": "BSD-3-Clause"
+      "license": "BSD",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/redis-8.8.0-arm64.zip",
+      "sha256": "0340b0ccc5494a70bbc565a163d0d00c606aa06bccb08ad804975224eae434bb",
+      "entry": "bin/redis-server"
     },
     "openlist": {
-      "version": "3.7.0",
-      "url": "https://gitee.com/your-name/mobileserver-bin-resources/raw/master/openlist/3.7.0/openlist-arm64.zip",
-      "sha256": "替换为实际文件sha256",
-      "license": "AGPLv3"
+      "version": "4.2.6",
+      "license": "AGPL-3.0",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/openlist-4.2.6-arm64.zip",
+      "sha256": "a614fdb0b703f104f2937981d664a4bf66484a2a19f6bf124b224ecd561e666e",
+      "entry": "bin/openlist"
+    },
+    "frp": {
+      "version": "0.71.0",
+      "license": "Apache-2.0",
+      "url": "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.0.0/frp-0.71.0-arm64.zip",
+      "sha256": "4632a397cb754ad53d13747ae27709f8ee4e94651fe999ff12cd28ca6a310f70",
+      "entry": "bin/frpc"
     }
   }
 }
